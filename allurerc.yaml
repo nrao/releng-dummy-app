@@ -1,0 +1,16 @@
+name: Dummy App Test Report
+output: "./allure-report"
+plugins:
+  awesome:
+    options:
+      publish: true
+      singleFile: true
+  dashboard:
+    options:
+      publish: true
+      reportName: Dashboard
+      singleFile: true
+allureService:
+  url: allure.nrao.casa
+  project: dummy_app
+  accessToken: ars1.eyJhY2Nlc3NUb2tlbiI6Ijk5RVc1QU1JVU9Bc3JaaTQzOTd5N3hCVE1iWEJuaDBDSXA0emxaSmdodFEiLCJ1cmwiOiJodHRwOi8vYWxsdXJlLm5yYW8uY2FzYSJ9.XkTl94KmDfUtJVKZX7eGaKXnQxwUj0KgCraGgBbHA68

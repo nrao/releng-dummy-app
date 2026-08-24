@@ -52,7 +52,7 @@ jobs:
       - name: Update dev environment image tag
         run: |
           cd gitops/
-          imageTag="$(echo "${{ needs.docker_cd.outputs.image_tags }}" | grep 'sha-')"
+          imageTag="$(echo "${{ needs.docker_cd_app.outputs.image_tags }}" | grep 'sha-')"
           chmod +x ./scripts/setEnvTag.sh
           ./scripts/setEnvTag.sh dummy-app aws-dev "$imageTag"
           git config user.email "releng-cd@nrao.edu"

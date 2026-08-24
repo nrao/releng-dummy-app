@@ -18,6 +18,10 @@ on:
         description: 'The dockerfile to build'
         type: string
         default: Dockerfile
+    outputs:
+      image_tags:
+          description: "The tags applied to the built container"
+          value: ${{ jobs.build.outputs.image_tags }}
     secrets:
       GHCR_TOKEN:
         description: GITHUB_TOKEN
@@ -32,6 +36,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      image_tags: ${{ steps.meta.outputs.tag-names }}
     steps:
       - uses: actions/checkout@v7
 

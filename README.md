@@ -25,7 +25,7 @@ The following environment variables can be set in the built container image, or 
 
 ## Install development dependencies
 ```bash
-pip install -e '.[all]'
+pip install -e .
 ```
 
 ## Run app in dev mode
@@ -50,3 +50,49 @@ docker run --rm \
 
 ### Some docker actions fail when run with `act`
 If the error mentions something about 'Bad Credentials' or a bad token, you probably need to setup a `GITHUB_TOKEN` and [pass it to `act`](https://nektosact.com/usage/index.html#github_token)
+
+# Testing
+
+## Install testing dependencies
+```bash
+pip install -e . --group test
+```
+
+## Run unit tests
+```bash
+pytest tests/unit/
+```
+
+## Run smoke tests
+> Note: Requires the app to be running - by default the smoke tests will work against the dev server run via `./runDev.sh`
+
+```bash
+pytest tests/smoke/
+```
+
+## Build testing container
+```bash
+docker build -t nrao/releng/dummy_app/tests:local -f tester.dockerfile .
+```
+
+## Run testing container against a running dummy-app container
+1. Create a testing network in docker
+```bash
+docker network create dummy-app-test
+```
+
+2. Run the dummy-app container in the test network
+```bash
+docker run -d --rm \
+    -p 5000:5000 \
+    --name dummy-app \
+    --network dummy-app-test \
+    nrao/releng/dummy_app:local
+```
+
+3. Run the test container (by default, runs the smoke tests)
+```bash
+docker run --rm \
+    --network dummy-app-test \
+    nrao/releng/dummy_app/tests:local
+```

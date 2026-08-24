@@ -5,9 +5,6 @@ on:
       should_publish:
         description: 'Publish container to a registry?'
         value: ${{ jobs.prep_env.outputs.should_publish }}
-      image_name:
-        description: 'The image name'
-        value: ${{ jobs.prep_env.outputs.image_name }}
       app_version:
         description: 'The app version'
         value: ${{ jobs.prep_env.outputs.app_version }}
@@ -20,11 +17,9 @@ env:
 
 jobs:
   prep_env:
-    name: Prepare Environment Variables
     runs-on: ubuntu-latest
     outputs:
       should_publish: ${{ env.SHOULD_PUBLISH }}
-      image_name: ${{ steps.imagename.outputs.image_name }}
       app_version: ${{ steps.setuptools.outputs.version }}
       argocd_app_name: ${{ steps.argocd.outputs.app_name }}
     steps:
@@ -53,13 +48,6 @@ jobs:
           echo "version=${scm_version}${timestamp}"
           echo "version=${scm_version}${timestamp}" >> "$GITHUB_OUTPUT"
 
-      - name: Get image name
-        id: imagename
-        run: |
-          image_name="${{ !env.ACT && 'ghcr.io' || 'registry.localhost:5432' }}/nrao/releng/dummy_app"
-          echo "image_name=${image_name}"
-          echo "image_name=${image_name}" >> "$GITHUB_OUTPUT"
-    
       - name: Get ArgoCD app name
         id: argocd
         run: |

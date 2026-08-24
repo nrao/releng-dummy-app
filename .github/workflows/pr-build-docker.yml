@@ -1,0 +1,38 @@
+name : 'Build docker container for PR'
+on:
+  pull_request:
+    branches: [main]
+    types: ["labeled", "unlabeled", "opened", "synchronize", "reopened"]
+    paths-ignore:
+      - 'helm-dummyapp/**'
+
+jobs:
+  prep_env:
+    uses: ./.github/workflows/prep-env.yml
+
+  docker_pr_app:
+    name : 'Build App container'
+    needs: [prep_env]
+    uses: ./.github/workflows/build-container.yml
+    with:
+      image_name: ${{ vars.APP_IMAGE_NAME }}
+      should_publish: ${{ needs.prep_env.outputs.should_publish == 'true' }}
+      app_version: ${{ needs.prep_env.outputs.app_version }}
+    secrets:
+      GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NEXUS_USER: ${{ secrets.NEXUS_USER }}
+      NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+
+  docker_pr_test:
+    name : 'Build Testing container'
+    needs: [prep_env]
+    uses: ./.github/workflows/build-container.yml
+    with:
+      image_name: ${{ vars.TEST_IMAGE_NAME }}
+      should_publish: ${{ needs.prep_env.outputs.should_publish == 'true' }}
+      app_version: ${{ needs.prep_env.outputs.app_version }}
+      dockerfile: tester.dockerfile
+    secrets:
+      GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NEXUS_USER: ${{ secrets.NEXUS_USER }}
+      NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}

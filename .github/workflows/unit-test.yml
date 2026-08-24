@@ -13,6 +13,10 @@ on:
       - 'tests/**'
       - 'pyproject.toml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
 jobs:
   unit:
     runs-on: ubuntu-latest
@@ -20,16 +24,42 @@ jobs:
     - uses: actions/checkout@v7
     
     - uses: ./.github/actions/setup-python
+ 
+    - name: Install Allure CLI
+      run: |
+        npm install -g allure@3
+        allure --version
 
     - name: Install project dependencies
       shell: bash
       run: |
         python -m pip install --root-user-action=ignore --upgrade pip
-        pip install --root-user-action=ignore -e '.[all]'
+        pip install --root-user-action=ignore -e . --group test
 
     - name: Unit test with coverage
       run: |
-        pytest --junitxml=junit/test-results.xml --cov=dummy_app --cov-report=xml
+        pytest --junitxml=junit/test-results.xml --cov=dummy_app --cov-report=xml --alluredir=allure-results tests/unit/
+        allure generate allure-results
+   
+    - name: Run Allure Action
+      if: ${{ !env.ACT && always() }}
+      uses: allure-framework/allure-action@v0 # update with latest version tag
+      with:
+        # Path to the generated report directory
+        # Default: "./allure-report"
+        report-directory: "./allure-report"
+        # State path where the report is hosted on
+        # Useful when you publish your report to GitHub pages or any other hosting for static web-sites
+        # Default: ""
+        # remote-href: "https://allure-framework.github.io/allure-action/"
+        # GitHub token used to create checks and post comments in pull requests
+        # Defaults to ${{ github.token }}
+        github-token: ${{ github.token }}
+        # Optional extra section comments to publish alongside the summary table
+        # Supported values: new, flaky, retry, all
+        # Default: hidden
+        sections: |
+          all
 
     - name: Upload test results
       if: ${{ !env.ACT && always() }}

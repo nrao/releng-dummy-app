@@ -21,8 +21,14 @@ dependencies = [
     "python-dotenv",
 ]
 
-[project.optional-dependencies]
-all = [
+[dependency-groups]
+test = [
     "pytest",
     "pytest-cov",
+    "allure-pytest",
+    "httpx",
+]
+
+all = [
+    {include-group = "test"},
 ]

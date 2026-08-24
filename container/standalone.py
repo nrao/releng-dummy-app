@@ -30,7 +30,8 @@ if __name__ == '__main__':
         'accesslog': "-",
         'access_log_format': "%(h)s %(l)s %(u)s %(t)s '%(r)s' %(s)s %(b)s '%(f)s' '%(a)s' in %(D)sμs"
     }
-    path = os.environ.get("CONTEXT_PATH", "")
-    os.environ["SCRIPT_NAME"] = path
+    path = os.environ.get("CONTEXT_PATH", "/").strip().rstrip("/")
+    if path not in ("", "/"):
+        os.environ["SCRIPT_NAME"] = path
     app = init_app()
     StandaloneApplication(app, options).run()

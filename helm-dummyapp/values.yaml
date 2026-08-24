@@ -14,6 +14,14 @@ image:
   pullPolicy: IfNotPresent
   tag: "1.1.5"
 
+tests:
+  enabled: false
+  ## Testing image
+  # image:
+  #   repository: "ghcr.io/nrao/releng/dummy_app/tests"
+  #   pullPolicy: IfNotPresent
+  #   tag: edge
+
 ## For simple usage, you can set single image pull credentials directly:
 imageCredentials: {}
   ## for GHCR, username and password will need to be a valid GitHub user and token with package:read permissions, e.g:

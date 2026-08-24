@@ -9,6 +9,7 @@ htmlcov/
 junit/
 .coverage
 coverage.xml
+allure*
 
 ## ACT files used in local testing
 .actrc

@@ -1,4 +1,4 @@
-FROM python:3.12-slim AS builder
+FROM python:3.13-slim-trixie AS builder
 
 LABEL org.opencontainers.image.title="NRAO Release Engineering Dummy App"
 LABEL org.opencontainers.image.description="A minimal app for testing and demoing GitOps processes"
@@ -11,7 +11,7 @@ WORKDIR /app
 
 COPY pyproject.toml ./
 
-RUN pip install --root-user-action=ignore --no-cache-dir --upgrade pip==26.1 pip-tools==7.6.0 && \
+RUN pip install --root-user-action=ignore --no-cache-dir --upgrade pip==26.2.1 pip-tools==7.6.1 && \
     pip-compile pyproject.toml --output-file requirements.txt && \
     pip install --root-user-action=ignore --no-cache-dir -r requirements.txt --target /packages
 

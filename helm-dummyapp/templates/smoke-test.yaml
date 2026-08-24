@@ -1,3 +1,4 @@
+{{- if .Values.tests.enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -15,31 +16,24 @@ spec:
         app: {{ include "dummyapp.fullname" . }}
         {{- include "dummyapp.labels" . | nindent 8 }}
     spec:
+      imagePullSecrets:
+      {{- with .Values.imagePullSecrets }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.imageCredentials.password }}
+        - name: '{{ include "dummyapp.fullname" . }}-registrykey'
+      {{- end }}
       containers:
         - name: smoke-test
-          image: curlimages/curl:latest
-          command:
-            - /bin/sh
-            - -c
-            - |
-              echo "Starting smoke tests..."
-
-              # Wait for service to be ready
-              echo "Waiting for service readiness..."
-              for i in $(seq 1 30); do
-                if curl -sf http://{{ include "dummyapp.fullname" . }}{{ .Values.contextPath | trimSuffix "/" }}/healthz > /dev/null 2>&1; then
-                  echo "Service is ready"
-                  break
-                fi
-                echo "Attempt $i: service not ready, waiting..."
-                sleep 2
-              done
-
-              # Test health endpoint
-              echo "Test 1: Health endpoint"
-              curl -sf http://{{ include "dummyapp.fullname" . }}{{ .Values.contextPath | trimSuffix "/" }}/healthz || { echo "FAIL: Health check"; exit 1; }
-              echo "PASS"
+          image: '{{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag | default .Chart.AppVersion }}'
+          imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
+          env:
+            - name: TEST_BASE_URL
+              value: 'http://{{ include "dummyapp.fullname" . }}{{ .Values.contextPath | trimSuffix "/"}}'
+          args:
+            - smoke
 
       restartPolicy: Never
   backoffLimit: 1
   activeDeadlineSeconds: 120
+{{- end }}

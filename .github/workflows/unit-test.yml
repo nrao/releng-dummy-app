@@ -37,7 +37,7 @@ jobs:
     - name: Unit test with coverage
       run: |
         pytest --junitxml=junit/test-results.xml --cov=dummy_app --cov-report=xml --alluredir=allure-results tests/unit/
-        allure generate allure-results --clean
+        allure generate allure-results
    
     - name: Run Allure Action
       if: ${{ !env.ACT && always() }}

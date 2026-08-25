@@ -25,6 +25,7 @@ jobs:
 
   docker_pr_test:
     name : 'Build Testing container'
+    if: ${{ needs.prep_env.outputs.should_publish == 'true' }}
     needs: [prep_env]
     uses: ./.github/workflows/build-container.yml
     with:

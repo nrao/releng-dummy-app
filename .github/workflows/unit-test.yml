@@ -35,6 +35,8 @@ jobs:
         pip install --root-user-action=ignore -e . --group test
 
     - name: Unit test with coverage
+      env:
+        ALLURE_ACCESS_TOKEN: ${{ secrets.ALLURE_ACCESS_TOKEN }}
       run: |
         pytest --junitxml=junit/test-results.xml --cov=dummy_app --cov-report=xml --alluredir=allure-results tests/unit/
         allure generate allure-results

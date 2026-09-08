@@ -2,16 +2,14 @@ name : Unit Test
 on:
   push:
     branches: [main]
-    paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'pyproject.toml'
+    paths-ignore:
+      - 'helm-dummyapp/**'
+      - 'README.md'
   pull_request:
     branches: [main]
-    paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'pyproject.toml'
+    paths-ignore:
+      - 'helm-dummyapp/**'
+      - 'README.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -37,6 +35,8 @@ jobs:
         pip install --root-user-action=ignore -e . --group test
 
     - name: Unit test with coverage
+      env:
+        ALLURE_ACCESS_TOKEN: ${{ secrets.ALLURE_ACCESS_TOKEN }}
       run: |
         pytest --junitxml=junit/test-results.xml --cov=dummy_app --cov-report=xml --alluredir=allure-results tests/unit/
         allure generate allure-results
@@ -45,19 +45,8 @@ jobs:
       if: ${{ !env.ACT && always() }}
       uses: allure-framework/allure-action@v0 # update with latest version tag
       with:
-        # Path to the generated report directory
-        # Default: "./allure-report"
         report-directory: "./allure-report"
-        # State path where the report is hosted on
-        # Useful when you publish your report to GitHub pages or any other hosting for static web-sites
-        # Default: ""
-        # remote-href: "https://allure-framework.github.io/allure-action/"
-        # GitHub token used to create checks and post comments in pull requests
-        # Defaults to ${{ github.token }}
         github-token: ${{ github.token }}
-        # Optional extra section comments to publish alongside the summary table
-        # Supported values: new, flaky, retry, all
-        # Default: hidden
         sections: |
           all
 

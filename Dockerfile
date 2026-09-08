@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.description="A minimal app for testing and demoin
 LABEL org.opencontainers.image.vendor="Associated Universities, Inc. Washington DC, USA"
 LABEL org.opencontainers.image.url="https://public.nrao.edu/"
 LABEL org.opencontainers.image.licenses="BSD-3-Clause"
-LABEL org.opencontainers.image.source="https://github.com/nrao/dummy-app" 
+LABEL org.opencontainers.image.source="https://github.com/nrao/releng-dummy-app" 
 
 WORKDIR /app
 

@@ -4,6 +4,9 @@ import pytest
 
 @pytest.mark.smoke
 def test_heathz_returns_version(client):
+    """
+    Verify that the /healthz endpoint returns the app version in its response
+    """
     response = client.get("/healthz")
 
     assert response.status_code == 200

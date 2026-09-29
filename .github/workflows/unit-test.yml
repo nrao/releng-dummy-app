@@ -19,7 +19,9 @@ concurrency:
 
 jobs:
   unit:
-    runs-on: ubuntu-latest
+    runs-on: 
+      group: aws-arc
+      labels: aws-arc-runner-lapis-dev
     steps:
     - uses: actions/checkout@v7
     

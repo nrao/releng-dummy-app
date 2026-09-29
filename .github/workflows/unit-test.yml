@@ -22,6 +22,9 @@ jobs:
     runs-on: 
       group: aws-arc
       labels: aws-arc-runner-lapis-dev
+    container:
+      image: ubuntu:latest
+
     steps:
     - uses: actions/checkout@v7
     

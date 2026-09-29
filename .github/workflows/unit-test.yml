@@ -36,6 +36,8 @@ jobs:
         RP_API_KEY: ${{ secrets.REPORTPORTAL_API_KEY }}
         AGENT_NO_ANALYTICS: True
       run: |
+        curl -vsSL https://report-portal.nrao.casa/api/info -H "Authorization: Bearer ${{ secrets.REPORTPORTAL_API_KEY }}"
+
         pytest --junitxml=junit/test-results.xml \
           --log-cli-level DEBUG \
           --cov=dummy_app --cov-report=xml \

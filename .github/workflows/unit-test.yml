@@ -25,11 +25,6 @@ jobs:
     
     - uses: ./.github/actions/setup-python
  
-    - name: Install Allure CLI
-      run: |
-        npm install -g allure@3
-        allure --version
-
     - name: Install project dependencies
       shell: bash
       run: |
@@ -37,29 +32,15 @@ jobs:
         pip install --root-user-action=ignore -e . --group test
 
     - name: Unit test with coverage
+      env:
+        RP_API_KEY: ${{ secrets.REPORTPORTAL_API_KEY }}
       run: |
-        pytest --junitxml=junit/test-results.xml --cov=dummy_app --cov-report=xml --alluredir=allure-results tests/unit/
-        allure generate allure-results
-   
-    - name: Run Allure Action
-      if: ${{ !env.ACT && always() }}
-      uses: allure-framework/allure-action@v0 # update with latest version tag
-      with:
-        # Path to the generated report directory
-        # Default: "./allure-report"
-        report-directory: "./allure-report"
-        # State path where the report is hosted on
-        # Useful when you publish your report to GitHub pages or any other hosting for static web-sites
-        # Default: ""
-        # remote-href: "https://allure-framework.github.io/allure-action/"
-        # GitHub token used to create checks and post comments in pull requests
-        # Defaults to ${{ github.token }}
-        github-token: ${{ github.token }}
-        # Optional extra section comments to publish alongside the summary table
-        # Supported values: new, flaky, retry, all
-        # Default: hidden
-        sections: |
-          all
+        pytest --junitxml=junit/test-results.xml \
+          --cov=dummy_app --cov-report=xml \
+          --rp-launch "$GITHUB_REF_NAME" \
+          --rp-launch-description "${GITHUB_EVENT_NAME}: $GITHUB_REF_NAME | $GITHUB_SHA" \
+          -o "rp_tests_attributes=unit github $GITHUB_ACTOR" \
+          tests/unit/
 
     - name: Upload test results
       if: ${{ !env.ACT && always() }}

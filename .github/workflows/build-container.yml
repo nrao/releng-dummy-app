@@ -35,6 +35,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
     outputs:
       image_tags: ${{ steps.meta.outputs.tag-names }}
@@ -58,7 +61,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Login to Nexus
         if: ${{ inputs.should_publish }}

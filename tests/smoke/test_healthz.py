@@ -1,5 +1,8 @@
 import re
 
+import pytest
+
+@pytest.mark.smoke
 def test_heathz_returns_version(client):
     response = client.get("/healthz")
 

@@ -3,6 +3,7 @@ import pytest
 import ctypes
 
 
+@pytest.mark.smoke
 def test_random_failure():
     if random.random() < 0.15:
         assert False, "Random failure triggered (15% chance)"

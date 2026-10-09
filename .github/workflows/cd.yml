@@ -7,12 +7,12 @@ on:
 
 jobs:
   prep_env:
-    uses: ./.github/workflows/prep-env.yml
+    uses: $/.github/workflows/prep-env.yml
 
   docker_cd_app:
     name : 'Build App container'
     needs: [prep_env]
-    uses: ./.github/workflows/build-container.yml
+    uses: $/.github/workflows/build-container.yml
     with:
       image_name: ${{ vars.APP_IMAGE_NAME }}
       should_publish: true
@@ -25,7 +25,7 @@ jobs:
   docker_cd_test:
     name : 'Build Testing container'
     needs: [prep_env]
-    uses: ./.github/workflows/build-container.yml
+    uses: $/.github/workflows/build-container.yml
     with:
       image_name: ${{ vars.TEST_IMAGE_NAME }}
       should_publish: true
@@ -64,7 +64,7 @@ jobs:
   argocd_dev:
     if: ${{ !github.event.act }}
     needs: [gitops_dev]
-    uses: ./.github/workflows/argo-check.yml
+    uses: $/.github/workflows/argo-check.yml
     with:
       app_name: dummy-app-dev
     secrets:
@@ -99,7 +99,7 @@ jobs:
   argocd_qa:
     if: ${{ !github.event.act }}
     needs: [gitops_qa]
-    uses: ./.github/workflows/argo-check.yml
+    uses: $/.github/workflows/argo-check.yml
     with:
       app_name: dummy-app-qa
     secrets:

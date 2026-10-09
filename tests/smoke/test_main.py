@@ -1,5 +1,7 @@
-import re
 
+import pytest
+
+@pytest.mark.smoke
 def test_root_is_accessible(client):
     response = client.get("/")
 

@@ -18,7 +18,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  prep_env:
+    uses: $/.github/workflows/prep-env.yml
+
   unit:
+    name : 'Unit tests'
+    needs: [prep_env]
     runs-on: ubuntu-latest
     ## Replace with the following to run in cluster:
     # runs-on: 
@@ -35,11 +40,15 @@ jobs:
     #     apt-get install -y git libsqlite3-dev
 
     - uses: actions/checkout@v7
+      with:
+        ref:  ${{ github.event.pull_request.head.sha || '' }}
 
     - uses: $/.github/actions/setup-python
 
     - name: Install project dependencies
       shell: bash
+      env:
+        SETUPTOOLS_SCM_PRETEND_VERSION_FOR_DUMMY_APP: ${{ needs.prep_env.outputs.app_version }}
       run: |
         pip install --root-user-action=ignore -e . --group test
 
@@ -55,6 +64,7 @@ jobs:
           --rp-launch "$GITHUB_REF_NAME" \
           --rp-launch-description "${GITHUB_EVENT_NAME}: $GITHUB_REF_NAME | $GITHUB_SHA" \
           -o "rp_tests_attributes=unit github $GITHUB_ACTOR" \
+          -o "rp_launch_attributes=git_sha:${GITHUB_SHA}" \
           tests/unit/
 
     - name: Upload test results

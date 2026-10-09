@@ -19,17 +19,20 @@ concurrency:
 
 jobs:
   unit:
-    runs-on: 
-      group: aws-arc
-      labels: aws-arc-runner-lapis-dev
-    container:
-      image: ubuntu:latest
+    runs-on: ubuntu-latest
+    ## Replace with the following to run in cluster:
+    # runs-on: 
+    #   group: aws-arc
+    #   labels: aws-arc-runner-lapis-dev
+    # container:
+    #   image: ubuntu:latest
 
     steps:
-    - name: install git
-      run: |
-        apt-get update
-        apt-get install -y git libsqlite3-dev
+    ## Only necessary if runing on arc-runner
+    # - name: install git
+    #   run: |
+    #     apt-get update
+    #     apt-get install -y git libsqlite3-dev
 
     - uses: actions/checkout@v7
 

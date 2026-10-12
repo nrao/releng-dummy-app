@@ -30,6 +30,9 @@ spec:
           env:
             - name: TEST_BASE_URL
               value: 'http://{{ include "dummyapp.fullname" . }}{{ .Values.contextPath | trimSuffix "/"}}'
+            - name: REPORTPORTAL_API_KEY
+              valueFrom:
+                secretKeyRef: '{{ .Values.tests.reportingApiSecretName }}'
           args:
             - "--reportportal"
             - "--rp-launch-description"

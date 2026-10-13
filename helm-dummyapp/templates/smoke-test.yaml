@@ -32,7 +32,9 @@ spec:
               value: 'http://{{ include "dummyapp.fullname" . }}{{ .Values.contextPath | trimSuffix "/"}}'
             - name: REPORTPORTAL_API_KEY
               valueFrom:
-                secretKeyRef: '{{ .Values.tests.reportingApiSecretName }}'
+                secretKeyRef: 
+                  name: '{{ .Values.tests.reportingApiSecretName }}'
+                  key: token
           args:
             - "--reportportal"
             - "--rp-launch-description"

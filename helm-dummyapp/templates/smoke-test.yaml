@@ -30,7 +30,19 @@ spec:
           env:
             - name: TEST_BASE_URL
               value: 'http://{{ include "dummyapp.fullname" . }}{{ .Values.contextPath | trimSuffix "/"}}'
+            - name: RP_API_KEY
+              valueFrom:
+                secretKeyRef: 
+                  name: '{{ .Values.tests.reportingApiSecretName }}'
+                  key: token
           args:
+            - "--reportportal"
+            - "--rp-launch-description"
+            - "Smoke test"
+            - "-o"
+            - "rp_api_key=${RP_API_KEY}"
+            - "-o"
+            - "rp_launch_attributes=git_sha:${GITHUB_SHA}"
             - smoke
 
       restartPolicy: Never

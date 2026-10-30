@@ -23,10 +23,10 @@ dependencies = [
 
 [dependency-groups]
 test = [
-    "pytest",
-    "pytest-cov",
-    "allure-pytest",
     "httpx",
+    "pytest-cov",
+    "pytest-reportportal",
+    "pytest",
 ]
 
 all = [

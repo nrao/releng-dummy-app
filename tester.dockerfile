@@ -13,10 +13,10 @@ WORKDIR /workspace
 
 COPY --from=builder /packages /packages
 
-COPY tests/ ./
+COPY pytest.ini tests/ ./
 
 ENV PYTHONPATH="/packages:/workspace"
 ENV TEST_BASE_URL="http://dummy-app:5000"
 
 ENTRYPOINT [ "/usr/bin/python", "-m", "pytest" ]
-CMD [ "smoke"]
+CMD [ "smoke" ]

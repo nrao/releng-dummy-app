@@ -53,8 +53,8 @@ jobs:
         run: |
           cd gitops/
           imageTag="$(echo "${{ needs.docker_cd_app.outputs.image_tags }}" | grep 'sha-')"
-          chmod +x ./scripts/setEnvTag.sh
-          ./scripts/setEnvTag.sh dummy-app aws-dev "$imageTag"
+          chmod +x ./scripts/cd/set-env-tag.sh
+          ./scripts/cd/set-env-tag.sh dummy-app aws-dev "$imageTag"
           git config user.email "releng-cd@nrao.edu"
           git config user.name "CD Bot"
           git add .
@@ -88,8 +88,8 @@ jobs:
       - name: Promote dev imageTag to QA
         run: |
           cd gitops/
-          chmod +x ./scripts/promote.sh
-          ./scripts/promote.sh dummy-app aws-dev aws-qa
+          chmod +x ./scripts/cd/promote.sh
+          ./scripts/cd/promote.sh dummy-app aws-dev aws-qa
           git config user.email "releng-cd@nrao.edu"
           git config user.name "CD Bot"
           git add .

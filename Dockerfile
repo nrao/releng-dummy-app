@@ -1,4 +1,4 @@
-FROM python:3.13-slim-trixie AS builder
+FROM python:3.14-slim
 
 LABEL org.opencontainers.image.title="NRAO Release Engineering Dummy App"
 LABEL org.opencontainers.image.description="A minimal app for testing and demoing GitOps processes"
@@ -11,9 +11,9 @@ WORKDIR /app
 
 COPY pyproject.toml ./
 
-RUN pip install --root-user-action=ignore --no-cache-dir --upgrade pip==26.2.1 pip-tools==7.6.1 && \
+RUN pip install --root-user-action=ignore --no-cache-dir --upgrade pip pip-tools && \
     pip-compile pyproject.toml --output-file requirements.txt && \
-    pip install --root-user-action=ignore --no-cache-dir -r requirements.txt --target /packages
+    pip install --root-user-action=ignore --no-cache-dir -r requirements.txt
 
 COPY src/ ./
 
@@ -21,16 +21,11 @@ ARG VERSION
 ENV VERSION=$VERSION
 ENV SETUPTOOLS_SCM_PRETEND_VERSION_FOR_DUMMY_APP=$VERSION
 
-RUN pip install --root-user-action=ignore --no-cache-dir .  --target /packages
+RUN pip install --root-user-action=ignore --no-cache-dir .
 
-FROM gcr.io/distroless/python3-debian13
-
-WORKDIR /app
-COPY --from=builder /app /app
-COPY --from=builder /packages /packages
 COPY container/ ./
 
-ENV PYTHONPATH="/packages:/app"
+ENV PYTHONPATH="/app"
 
 ENV SAMPLE_VAR=docker_default
 ENV COLOR=blue
@@ -38,4 +33,4 @@ ENV CONTEXT_PATH=/
 
 EXPOSE 5000
 
-CMD [ "standalone.py"]
+CMD [ "python", "standalone.py"]

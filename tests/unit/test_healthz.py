@@ -2,9 +2,13 @@
 import re
 
 from flask import json
+import pytest
 
-
+@pytest.mark.unit
 def test_heathz_returns_version(client):
+    """
+    Verify that the /healthz endpoint returns the app version in its response
+    """
     response = client.get("/healthz")
     data = json.loads(response.data)
     assert "version" in data.keys(), '"version" should be present in the response'

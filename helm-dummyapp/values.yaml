@@ -16,6 +16,8 @@ image:
 
 tests:
   enabled: false
+  ## Report Portal API token secret
+  # reportingApiSecretName: 'api-token-secret-name'
   ## Testing image
   # image:
   #   repository: "ghcr.io/nrao/releng/dummy_app/tests"

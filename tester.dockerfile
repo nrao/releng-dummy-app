@@ -12,5 +12,5 @@ COPY pytest.ini tests/ ./
 ENV PYTHONPATH="/workspace"
 ENV TEST_BASE_URL="http://dummy-app:5000"
 
-ENTRYPOINT [ "/usr/bin/python", "-m", "pytest" ]
+ENTRYPOINT [ "python", "-m", "pytest" ]
 CMD [ "smoke" ]

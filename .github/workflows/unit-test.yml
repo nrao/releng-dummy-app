@@ -22,8 +22,12 @@ jobs:
     uses: $/.github/workflows/prep-env.yml
 
   unit:
-    name : 'Unit tests'
     needs: [prep_env]
+    name: Python ${{ matrix.python-version }} Unit Tests
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.13", "3.14", "3.15"]
     runs-on: ubuntu-latest
     ## Replace with the following to run in cluster:
     # runs-on: 
@@ -44,6 +48,8 @@ jobs:
         ref:  ${{ github.event.pull_request.head.sha || '' }}
 
     - uses: $/.github/actions/setup-python
+      with:
+        python-version: ${{ matrix.python-version }}
 
     - name: Install project dependencies
       shell: bash

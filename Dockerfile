@@ -1,4 +1,4 @@
-FROM python:3.13-slim-trixie AS builder
+FROM python:3.14-slim-trixie AS builder
 
 LABEL org.opencontainers.image.title="NRAO Release Engineering Dummy App"
 LABEL org.opencontainers.image.description="A minimal app for testing and demoing GitOps processes"

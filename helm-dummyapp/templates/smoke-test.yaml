@@ -37,10 +37,10 @@ spec:
                   key: token
           args:
             - "--reportportal"
+            - "--rp-launch"
+            - "Dummy App Smoke"
             - "--rp-launch-description"
-            - "Smoke test"
-            - "-o"
-            - "rp_api_key=${RP_API_KEY}"
+            - "Smoke test | {{ include "dummyapp.fullname" . }}"
             - "-o"
             - "rp_launch_attributes='smoke' 'app_name:{{ include "dummyapp.fullname" . }}' 'image:{{ .Values.image.tag | default .Chart.AppVersion }}' 'test_img:{{ .Values.tests.image.tag | default .Chart.AppVersion }}'"
             - smoke

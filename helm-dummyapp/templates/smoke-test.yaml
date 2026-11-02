@@ -35,20 +35,14 @@ spec:
                 secretKeyRef: 
                   name: '{{ .Values.tests.reportingApiSecretName }}'
                   key: token
-            - name: APP_FULLNAME
-              value: '{{ include "dummyapp.fullname" . }}'
-            - name: IMAGE_TAG
-              value: '{{ .Values.image.tag | default .Chart.AppVersion }}'
-            - name: TEST_IMAGE
-              value: '{{ .Values.tests.image.tag | default .Chart.AppVersion }}'
           args:
             - "--reportportal"
+            - "--rp-launch"
+            - "Dummy App Smoke"
             - "--rp-launch-description"
-            - "Smoke test"
+            - "Smoke test | {{ include "dummyapp.fullname" . }}"
             - "-o"
-            - "rp_api_key=${RP_API_KEY}"
-            - "-o"
-            - "rp_launch_attributes='smoke' 'app_name:${APP_FULLNAME}' 'image:${IMAGE_TAG}' 'test_img:${TEST_IMAGE}'"
+            - "rp_launch_attributes='smoke' 'app_name:{{ include "dummyapp.fullname" . }}' 'image:{{ .Values.image.tag | default .Chart.AppVersion }}' 'test_img:{{ .Values.tests.image.tag | default .Chart.AppVersion }}'"
             - smoke
 
       restartPolicy: Never

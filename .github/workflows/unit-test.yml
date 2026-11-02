@@ -61,6 +61,7 @@ jobs:
     - name: Unit test with coverage
       env:
         RP_API_KEY: ${{ secrets.REPORTPORTAL_API_KEY }}
+        PYTHON_VERSION: ${{ matrix.python-version }}
         AGENT_NO_ANALYTICS: True
       run: |
         pytest --junitxml=junit/test-results.xml \
@@ -70,7 +71,7 @@ jobs:
           --rp-launch "$GITHUB_REF_NAME" \
           --rp-launch-description "${GITHUB_EVENT_NAME}: $GITHUB_REF_NAME | $GITHUB_SHA" \
           -o "rp_tests_attributes=unit github $GITHUB_ACTOR" \
-          -o "rp_launch_attributes=git_sha:${GITHUB_SHA}" \
+          -o "rp_launch_attributes='git_sha:${GITHUB_SHA}' 'python:${PYTHON_VERSION}'" \
           tests/unit/
 
     - name: Upload test results

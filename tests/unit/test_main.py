@@ -16,7 +16,7 @@ def test_index_welcomes_nrao(client):
 @pytest.mark.unit
 def test_nrao_text_links_to_nrao_edu(client):
     """
-    Verify that the NRAO text links to hrao.edu
+    Verify that the NRAO text links to nrao.edu
     """
     response = client.get("/")
     soup = BeautifulSoup(response.text, "html.parser")

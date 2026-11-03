@@ -23,6 +23,7 @@ dependencies = [
 
 [dependency-groups]
 test = [
+    "beautifulsoup4",
     "httpx",
     "pytest-cov",
     "pytest-reportportal",

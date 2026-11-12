@@ -65,7 +65,7 @@ spec:
       stableService: {{ include "dummyapp.fullname" . }}-stable
       trafficRouting:
         traefik:
-          weightedTraefikServiceName: {{ include "dummyapp.fullname" . }}-traefik-service
+          weightedTraefikServiceName: {{ include "dummyapp.fullname" . }}
       steps:
         - setWeight: 20
         - pause: {duration: 1m}

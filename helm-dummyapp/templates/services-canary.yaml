@@ -34,7 +34,7 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: TraefikService
 metadata:
-  name: {{ include "dummyapp.fullname" . }}-traefik-service
+  name: {{ include "dummyapp.fullname" . }}
   labels:
     {{- include "dummyapp.labels" . | nindent 4 }}
 spec:

@@ -3,8 +3,6 @@ on:
   pull_request:
     branches: [main]
     types: ["labeled", "unlabeled", "opened", "synchronize", "reopened"]
-    paths-ignore:
-      - 'helm-dummyapp/**'
 
 jobs:
   prep_env:

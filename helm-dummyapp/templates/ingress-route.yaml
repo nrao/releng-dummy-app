@@ -15,7 +15,7 @@ spec:
     - {{ . | quote }}
     {{- end }}
   routes:
-  - match: Host(`example.com`) && PathPrefix(`{{ .Values.contextPath }}`)
+  - match: Host(`{{ .Values.ingressRoute.host }}`) && PathPrefix(`{{ .Values.contextPath }}`)
     kind: Rule
     services:
     - name: {{ include "dummyapp.fullname" . }}

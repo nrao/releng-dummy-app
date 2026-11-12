@@ -37,6 +37,14 @@ imagePullSecrets: []
 podAnnotations: {}
 podLabels: {}
 
+## Enables and configures the use of an Argo Rollout instead of a Deployment
+rollout:
+  enabled: false
+  ## Currently only supports canary
+  strategy:
+    canary:
+      steps: []
+
 service:
   type: ClusterIP
   port: 80

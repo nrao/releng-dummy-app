@@ -1,0 +1,78 @@
+{{- if .Values.rollout.enabled -}}
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ include "dummyapp.fullname" . }}
+  labels:
+    {{- include "dummyapp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 4
+  selector:
+    matchLabels:
+      {{- include "dummyapp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "dummyapp.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if or (.Values.imagePullSecrets) (.Values.imageCredentials.password) }}
+      imagePullSecrets:
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.imageCredentials.password }}
+        - name: '{{ include "dummyapp.fullname" . }}-registrykey'
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: SAMPLE_VAR
+              value: {{ .Values.sampleVar }}
+            - name: COLOR
+              value: {{ .Values.color }}
+            - name: CONTEXT_PATH
+              value: {{ .Values.contextPath }}
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: '{{ .Values.contextPath | trimSuffix "/" }}/healthz'
+              port: http
+          readinessProbe:
+            httpGet:
+              path: '{{ .Values.contextPath | trimSuffix "/"  }}/healthz'
+              port: http
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+  strategy:
+    canary:
+      canaryService: {{ include "dummyapp.fullname" . }}-canary
+      stableService: {{ include "dummyapp.fullname" . }}-stable
+      trafficRouting:
+        traefik:
+          weightedTraefikServiceName: {{ include "dummyapp.fullname" . }}-traefik-service
+      steps:
+        - setWeight: 20
+        - pause: {duration: 1m}
+        - setWeight: 40
+        - pause: {duration: 1m}
+        - setWeight: 60
+        - pause: {duration: 1m}
+        - setWeight: 80
+        - pause: {duration: 1m}
+{{- end }}

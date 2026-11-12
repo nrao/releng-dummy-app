@@ -1,3 +1,14 @@
 replicaCount: 5
 rollout:
   enabled: true
+
+ingress:
+  enabled: false
+
+ingressRoute:
+  enabled: true
+  matchRule: Host(`dummy-preview.localhost`) && PathPrefix(`/pr-42`)
+  entryPoints:
+    - websecure
+  tls:
+    secretName: local-selfsigned-tls

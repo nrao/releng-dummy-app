@@ -62,4 +62,11 @@ ingress:
     #       pathType: ImplementationSpecific
   tls: []
 
+ingressRoute:
+  enabled: false
+  host: "example.com"
+  entryPoints: []
+  tls:
+    secretName: tls-secret-name
+
 resources: {}

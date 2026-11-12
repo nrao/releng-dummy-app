@@ -1,0 +1,14 @@
+replicaCount: 5
+rollout:
+  enabled: true
+
+ingress:
+  enabled: false
+
+ingressRoute:
+  enabled: true
+  host: 'dummy-preview.localhost'
+  entryPoints:
+    - websecure
+  tls:
+    secretName: local-selfsigned-tls

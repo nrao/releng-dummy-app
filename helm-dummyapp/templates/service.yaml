@@ -1,3 +1,8 @@
+{{- /*
+When a Rollout is used, we need different Services (e.g. a Canary
+Rollout needs a -stable and -canary service)
+*/ -}}
+{{- if not .Values.rollout.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,3 +18,4 @@ spec:
       name: http
   selector:
     {{- include "dummyapp.selectorLabels" . | nindent 4 }}
+{{- end }}

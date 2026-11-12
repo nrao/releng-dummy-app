@@ -1,0 +1,27 @@
+{{- if .Values.ingressRoute.enabled -}}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "dummyapp.fullname" . }}
+  labels:
+    {{- include "dummyapp.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  entryPoints:
+    {{- range .Values.ingressRoute.entryPoints }}
+    - {{ . | quote }}
+    {{- end }}
+  routes:
+  - match: Host(`{{ .Values.ingressRoute.host }}`) && PathPrefix(`{{ .Values.contextPath }}`)
+    kind: Rule
+    services:
+    - name: {{ include "dummyapp.fullname" . }}
+      kind: TraefikService
+  {{- if .Values.ingressRoute.tls }}
+  tls:
+    secretName: {{ .Values.ingressRoute.tls.secretName }}
+  {{- end }}
+{{- end }}

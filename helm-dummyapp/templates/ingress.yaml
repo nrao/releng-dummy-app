@@ -36,6 +36,9 @@ spec:
             backend:
               service:
                 name: {{ include "dummyapp.fullname" $ }}
+                {{- if .Values.rollout.enabled -}}
+                kind: TraefikService
+                {{- end }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}

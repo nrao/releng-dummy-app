@@ -37,7 +37,7 @@ spec:
             backend:
               service:
                 name: {{ include "dummyapp.fullname" $ }}
-                {{- if $root.Values.rollout.enabled -}}
+                {{- if $root.Values.rollout.enabled }}
                 kind: TraefikService
                 {{- end }}
                 port:
